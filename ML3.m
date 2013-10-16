@@ -9,18 +9,18 @@ classdef ML3 < handle
     %
     % Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
     % Written by Marco Fornoni <marco.fornoni@idiap.ch>
-    % 
+    %
     % This file is part of the ML3 Software.
     %
     % ML3 is free software: you can redistribute it and/or modify
     % it under the terms of the GNU General Public License version 3 as
     % published by the Free Software Foundation.
-    % 
+    %
     % ML3 is distributed in the hope that it will be useful,
     % but WITHOUT ANY WARRANTY; without even the implied warranty of
     % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     % GNU General Public License for more details.
-    % 
+    %
     % You should have received a copy of the GNU General Public License
     % along with ML3. If not, see <http://www.gnu.org/licenses/>.
     %
@@ -28,53 +28,53 @@ classdef ML3 < handle
     properties
         lambda              % regularization weight
         
-        p                   % defines which value of p will be used in the 
-                            % p-norm regularizer
-
+        p                   % defines which value of p will be used in the
+        % p-norm regularizer
+        
         m                   % number of sub-models/class
         
         maxCCCPIter         % maximum number of CCCP iterations
         
         initStep            % the number of initialization iterations (with
-                            % all the local weights fixed -randomly-, the 
-                            % default is 1)
-
-        s0                  % the constant to add to the sample counter 
-                            % (the default is 0)
-                            
-        averaging           % if true computes the average of the solutions 
-                            % on the last epoch and uses it as the final 
-                            % solution (default is true)
-                            
+        % all the local weights fixed -randomly-, the
+        % default is 1)
+        
+        s0                  % the constant to add to the sample counter
+        % (the default is 0)
+        
+        averaging           % if true computes the average of the solutions
+        % on the last epoch and uses it as the final
+        % solution (default is true)
+        
         returnLocalBeta     % If true saves the sample-to-model assignments
-                            % (only for the correct class) and returns it 
-                            % as part of the model (default is false, on 
-                            % large datasets it requires a lot of memory)
-                            
-        verbose             % if verbose==0 no output is produced, 
-                            % if verbose==1 synthetic output is produced, 
-                            % if verbose==2 measures the loss and the 
-                            % objective function, at each iteration, 
-                            % (default is 1, set it to 0 for benchmarking 
-                            % purposes)
-                            
-        addBias             % if true, adds a 1 at the end of each feature 
-                            % vector, to emulate learning of a bias (for 
-                            % each model)
+        % (only for the correct class) and returns it
+        % as part of the model (default is false, on
+        % large datasets it requires a lot of memory)
+        
+        verbose             % if verbose==0 no output is produced,
+        % if verbose==1 synthetic output is produced,
+        % if verbose==2 measures the loss and the
+        % objective function, at each iteration,
+        % (default is 1, set it to 0 for benchmarking
+        % purposes)
+        
+        addBias             % if true, adds a 1 at the end of each feature
+        % vector, to emulate learning of a bias (for
+        % each model)
     end
     
     methods
         function newClassifier=ML3(lambda,m,maxCCCPIter,p)
             %
             % Constructs a ML3 object
-            % 
+            %
             % lambda            regularization weight (by default 1/n)
             %
             % m                 number of sub-models/class (by default 10)
             %
             % maxCCCPIter       maximum number of CCCP iterations
             %
-            % p                 defines which value of p will be used in  
+            % p                 defines which value of p will be used in
             %                   the p-norm regularizer (by default 1.5)
             %
             
@@ -150,7 +150,7 @@ classdef ML3 < handle
             
             % It uses the class of the training data matrix (single, or
             % double precision) and initialize all the other model
-            % variables accordingly            
+            % variables accordingly
             targetClass=class(X);
             
             model.lambda=cast(lambda,targetClass);
@@ -192,31 +192,31 @@ classdef ML3 < handle
             %                     (by default 10)
             %
             % maxCCCPIter         maximum number of CCCP iterations
-	    % 			  (by default 30)
+            % 			  (by default 30)
             %
-            % p                   defines which value of p-norm will be 
-	    %			  used (by default 1.5)
+            % p                   defines which value of p-norm will be
+            %			  used (by default 1.5)
             %
-            % averaging           if true computes the average of the 
-            %                     solutions on the last epoch and uses it 
+            % averaging           if true computes the average of the
+            %                     solutions on the last epoch and uses it
             %                     as the final solution
             %
-            % initStep            if true, the first epoch is run as a 
-            %                     normal SVM (with all the local 
+            % initStep            if true, the first epoch is run as a
+            %                     normal SVM (with all the local
             %                     maximizations disabled)
             %
-            % s0                  the coefficient to be added to s, in the 
+            % s0                  the coefficient to be added to s, in the
             %                     learning rate (eta=1/(lambda*(s+s0));
             %
-            % verbose             if true measures the loss and the 
-            %                     objective function, at each iteration, 
+            % verbose             if true measures the loss and the
+            %                     objective function, at each iteration,
             %                     if false measures the AEL
             %
-            % returnLocalBeta     if true saves the sample-to-model 
-            %                     assignments (only for the correct class) 
+            % returnLocalBeta     if true saves the sample-to-model
+            %                     assignments (only for the correct class)
             %                     and returns it as part of the model
             %
-            % Xte                 if present (and non-empty) the model is 
+            % Xte                 if present (and non-empty) the model is
             %                     tested on these features at each epoch
             %
             % yte                 if the lables for the testing features
@@ -258,7 +258,7 @@ classdef ML3 < handle
             
             % labels are expected to be between 0 and C-1
             % if necessary, a mapping is created to enforce this
-            % requirement 
+            % requirement
             uy=unique(y);
             my=max(max(y),numel(uy));
             if  sum(uy~=reshape((1:my),size(uy)))
@@ -320,15 +320,16 @@ classdef ML3 < handle
             % Computes the confusion matrix
             %
             
-            minx = min(x);
-            maxx = max(x);
+            ux = unique(x);
+            ux=reshape(ux,1,numel(ux));
+            uy = unique(y);
+            uy=reshape(uy,1,numel(uy));
             
-            c = zeros(maxx-minx);
-            for i = minx:maxx
-                index = find(x == i);
-                for j = minx:maxx
-                    z = y(index);
-                    c(i-minx+1,j-minx+1) = length(find(z == j));
+            c = zeros(numel(ux),numel(uy));
+            for i = ux
+                z = y(x == i);
+                for j = uy
+                    c(i,j) = sum(z == j);
                 end
             end
         end
