@@ -5,7 +5,8 @@ classdef ML3 < handle
     % Reference:
     % "Multiclass Latent Locally Linear Support Vector Machines"
     % Marco Fornoni, Barbara Caputo and Francesco Orabona
-    % JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013 Proceedings)
+    % JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013
+    % Proceedings) 
     %
     % Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
     % Written by Marco Fornoni <marco.fornoni@idiap.ch>
@@ -29,38 +30,38 @@ classdef ML3 < handle
         lambda              % regularization weight
         
         p                   % defines which value of p will be used in the
-        % p-norm regularizer
+                            % p-norm regularizer
         
         m                   % number of sub-models/class
         
         maxCCCPIter         % maximum number of CCCP iterations
         
         initStep            % the number of initialization iterations (with
-        % all the local weights fixed -randomly-, the
-        % default is 1)
+                            % all the local weights fixed -randomly-, the
+                            % default is 1)
         
         s0                  % the constant to add to the sample counter
-        % (the default is 0)
+                            % (the default is 0)
         
         averaging           % if true computes the average of the solutions
-        % on the last epoch and uses it as the final
-        % solution (default is true)
+                            % on the last epoch and uses it as the final
+                            % solution (default is true)
         
         returnLocalBeta     % If true saves the sample-to-model assignments
-        % (only for the correct class) and returns it
-        % as part of the model (default is false, on
-        % large datasets it requires a lot of memory)
+                            % (only for the correct class) and returns it
+                            % as part of the model (default is false, on
+                            % large datasets it requires a lot of memory)
         
         verbose             % if verbose==0 no output is produced,
-        % if verbose==1 synthetic output is produced,
-        % if verbose==2 measures the loss and the
-        % objective function, at each iteration,
-        % (default is 1, set it to 0 for benchmarking
-        % purposes)
+                            % if verbose==1 synthetic output is produced,
+                            % if verbose==2 measures the loss and the
+                            % objective function, at each iteration,
+                            % (default is 1, set it to 0 for benchmarking
+                            % purposes)
         
         addBias             % if true, adds a 1 at the end of each feature
-        % vector, to emulate learning of a bias (for
-        % each model)
+                            % vector, to emulate learning of a bias (for
+                            % each model)
     end
     
     methods
@@ -300,24 +301,39 @@ classdef ML3 < handle
             % model             a trained ML3 model
             %
             
+            % if necessary, maps the ground-truth to the labels used for 
+            % training (e.g. if the ground-truth is in {-1,1})
             if isfield(model,'mapping')
                 labels2=labels;
                 for i=1:numel(model.mapping)
                     labels2(labels==model.mapping(i))=i;
                 end
                 labels=labels2;
+                mapping=model.mapping;
                 model=rmfield(model,'mapping');
             end
             
+            % tests the model and computes the confusion matrices
             [accuracy,predict_labels,dec_values]=testML3(model,full(cast(X,class(model.lambda))),int32(labels-1));
             predict_labels=predict_labels+1;
+            confusion=ML3.cfusion(int16(labels),int16(predict_labels));
             
-            confusion=ML3.confmat(int16(labels),int16(predict_labels));
+            % if necessary, remaps-back the predicted labels to the
+            % original ones (e.g. if the ground-truth was in {-1,1})
+            if exist('mapping','var')
+                predict_labels2=cast(predict_labels,class(labels));
+                for i=1:numel(mapping)
+                    predict_labels2(predict_labels==i)=mapping(i);
+                end
+                predict_labels=predict_labels2;
+            end
         end
         
-        function c = confmat(x,y)
+        function c = cfusion(x,y)
             %
-            % Computes the confusion matrix
+            % Computes the confusion matrix c,
+            % using the ground-truth output x
+            % and the predicted output y
             %
             
             ux = unique(x);
