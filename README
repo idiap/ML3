@@ -48,4 +48,4 @@ In order to use the Software you need to:
 3) train the algorithm using: 
 	model=algo.train(features,labels);
 4) test the algorithm using: 
-   	[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
+	[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
