@@ -297,10 +297,9 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 				f_old.noalias()=W_OLD[yt]*Xt;
 				computeOptimalBeta(f_old, localBetaYt, p, q, m, tau);
 				scores(yt)=localBetaYt.transpose()*f;
-
-				if(lastIteration && returnLocalBeta)
-					localBetaClass.col(it)=localBetaYt;
 			}
+			if(lastIteration && returnLocalBeta)
+				localBetaClass.col(it)=localBetaYt;
 
 			// COMPUTES THE LOSS
 			margin_true=scores(yt);
