@@ -2,7 +2,8 @@ classdef ML3 < handle
     %
     % Open source implementation of the ML3 classifier.
     %
-    % Reference:
+    % If you find this software useful, please cite:
+    %
     % "Multiclass Latent Locally Linear Support Vector Machines"
     % Marco Fornoni, Barbara Caputo and Francesco Orabona
     % JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013
