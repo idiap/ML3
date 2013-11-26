@@ -263,7 +263,7 @@ classdef ML3 < handle
             % requirement
             uy=unique(y);
             my=max(max(y),numel(uy));
-            if  sum(uy~=reshape((1:my),size(uy)))
+            if  numel(uy)~=my || sum(uy~=reshape((1:my),size(uy)))
                 mapping=uy;
                 y2=y;
                 yte2=yte;
