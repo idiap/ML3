@@ -1,4 +1,4 @@
-ML3 - Multiclass Latent Locally Linear SVM
+Multiclass Latent Locally Linear SVM
 ==========================================
 
 | Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
@@ -37,10 +37,10 @@ and the exibility of non linear ones, a growing, promising alternative is
 represented by methods that learn non-linear classifiers through local combinations 
 of linear ones.
 
-ML3 can learn complex decision functions (traditionally given by kernels) 
-through the use of locally linear decision functions. Differently from kernel 
-classifiers, ML3 makes use of a set of linear models that are locally linearly 
-combined to form a non-linear decision boundary in the input space. 
+The Multiclass Latent Locally Linear SVM (ML3) can learn complex decision functions 
+(traditionally given by kernels) through the use of locally linear decision functions. 
+Differently from kernel classifiers, ML3 makes use of a set of linear models that are 
+locally linearly combined to form a non-linear decision boundary in the input space. 
 Thanks to the latent formulation, the combination coefficients are modeled as 
 latent variables and efficiently estimated using an analytic solution.
 
