@@ -124,7 +124,7 @@ classdef ML3 < handle
             model=obj.trainModel(features,labels, obj.lambda,obj.m,obj.maxCCCPIter, obj.p,obj.averaging,obj.initStep,obj.s0,obj.verbose,obj.returnLocalBeta);
         end
         
-        function [dec_values,predict_labels,accuracy,confusion]=test(obj,features,labels,model)
+        function [dec_values,predict_labels,accuracy,confusion,predict_beta]=test(obj,features,labels,model)
             %
             % Tests the model using the provided features and labels
             %
@@ -139,7 +139,11 @@ classdef ML3 < handle
             if obj.addBias
                 features(end+1,:)=obj.addBias;
             end
-            [dec_values,predict_labels,accuracy,confusion]=obj.testModel(features,labels,model);
+            if nargout >=5
+                [dec_values,predict_labels,accuracy,confusion,predict_beta]=obj.testModel(features,labels,model);
+            else
+                [dec_values,predict_labels,accuracy,confusion]=obj.testModel(features,labels,model);
+            end
         end
         
     end
@@ -293,7 +297,7 @@ classdef ML3 < handle
             end
         end
         
-        function [dec_values,predict_labels,accuracy,confusion]=testModel(X,labels,model)
+        function [dec_values,predict_labels,accuracy,confusion,predict_beta]=testModel(X,labels,model)
             %
             % TESTS A ML3 MODEL
             %
@@ -314,8 +318,14 @@ classdef ML3 < handle
                 model=rmfield(model,'mapping');
             end
             
+            if nargout >=5, computeBeta=true; else, computeBeta=false; end
+            
             % tests the model and computes the confusion matrices
-            [accuracy,predict_labels,dec_values]=testML3(model,full(cast(X,class(model.lambda))),int32(labels-1));
+            if computeBeta
+                [accuracy,predict_labels,dec_values,predict_beta]=testML3(model,full(cast(X,class(model.lambda))),int32(labels-1));
+            else
+                [accuracy,predict_labels,dec_values]=testML3(model,full(cast(X,class(model.lambda))),int32(labels-1));
+            end
             predict_labels=predict_labels+1;
             confusion=ML3.cfusion(int16(labels),int16(predict_labels));
             

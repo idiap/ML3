@@ -60,7 +60,7 @@ public:
 
 	void setOutput(mxArray * plhs[], const Model<T> model, const mxClassID  category);
 
-	void setOutput(mxArray * plhs[], int nlhs, T accuracy, ArrayXi pred_labels, MatrixXT dec_values, const mxClassID category);
+	void setOutput(mxArray * plhs[], int nlhs, T accuracy, ArrayXi &pred_labels, MatrixXT &dec_values, MatrixXT &pred_beta, const mxClassID category);
 
 	mxArray* mxCreateTScalar(T value, const mxClassID category);
 };

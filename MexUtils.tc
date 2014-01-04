@@ -58,18 +58,20 @@ double MexUtils<T>::timer_query( void )
 }
 
 template<typename T>
-void MexUtils<T>::setOutput(mxArray * plhs[], int nlhs, T accuracy, ArrayXi pred_labels, MatrixXT dec_values, const mxClassID  category) {
+void MexUtils<T>::setOutput(mxArray * plhs[], int nlhs, T accuracy, ArrayXi &pred_labels, MatrixXT &dec_values, MatrixXT &pred_beta, const mxClassID  category) {
 	//RETURNS THE OUTPUT
 	T *data;
 	uint *uidata;
 
 	const uint n =pred_labels.rows();
+	const uint m =pred_beta.cols();
 	const uint C =dec_values.cols();
 
 	plhs[0] = mxCreateDoubleScalar(accuracy);
 
 	const mwSize size[]={n,1};
 	const mwSize sizeDec[]={n,C};
+	const mwSize sizeBeta[]={n,m};
 
 	if (nlhs>1){
 		plhs[1]=mxCreateNumericArray(2,size,mxUINT32_CLASS,mxREAL);
@@ -84,6 +86,15 @@ void MexUtils<T>::setOutput(mxArray * plhs[], int nlhs, T accuracy, ArrayXi pred
 		for (uint k=0;k<C;k++){
 			for (uint j=0;j<n;j++){
 				data[k*n+j]=dec_values(j,k);
+			}
+		}
+	}
+	if (nlhs>3){
+		plhs[3]=mxCreateNumericArray(2,sizeBeta,category,mxREAL);
+		data = (T*) mxGetData(plhs[3]);
+		for (uint k=0;k<m;k++){
+			for (uint j=0;j<n;j++){
+				data[k*n+j]=pred_beta(j,k);
 			}
 		}
 	}

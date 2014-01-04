@@ -36,13 +36,15 @@
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-	if (nlhs!=1 && nlhs!=2 && nlhs!=3)
+	if (nlhs!=1 && nlhs!=2 && nlhs!=3 && nlhs!=4)
 		mexErrMsgTxt("The number of output variables must be either 1:\n"
 				"example syntax: accuracy=testML3(model,X_te,y_te)\n"
 				"or 2:\n"
 				"example syntax: [accuracy,pred_labels]=testML3(model,X_test,y_test)\n"
 				"or 3:\n"
-				"example syntax: [accuracy,pred_labels,decision_vals]=testML3(model,X_test,y_test)\n");
+				"example syntax: [accuracy,pred_labels,decision_vals]=testML3(model,X_test,y_test)\n"
+				"or 4:\n"
+				"example syntax: [accuracy,pred_labels,decision_vals,pred_beta]=testML3(model,X_test,y_test)\n");
 	if (nrhs!=3 && nrhs!=4)
 		mexErrMsgTxt("The number of input variables must either be 3:\n"
 				"example syntax: accuracy=trainML3(model,X_te,y_te)\n"
@@ -57,6 +59,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	const uint ylen = mxGetM(mxY);
 	const uint ylen2 = mxGetN(mxY);
 	int *dy = (int *) mxGetData(mxY);
+
+	//IF THE METHODS NEEDS TO RETURN THE LOCAL BETA
+	//THE LOCAL BETA MATRIX HAS AS MANY ROWS AS THE # OF SAMPLES
+	//OTHERWISE IT HAS 0 ROWS
+	const uint blen = (nlhs==4)?xlen:0;
 
 	// MAPS THE MATLAB ARRAY INTO AN EIGEN ARRAY OF INTEGERS
 	const ArrayXi y = Map<ArrayXi>(dy,ylen);
@@ -88,11 +95,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		const Map<MatrixXf> X(dX,xdim,xlen);
 
 		const uint &C=model.nCla;
+		const uint &m=model.m;
 		MatrixXf dec_values(xlen,C);
+		MatrixXf pred_beta(blen,m);
 		ArrayXi pred_labels(xlen);
 
 		if (nrhs==3){
-			accuracy = ml3.testML3(model,X,y,dec_values,pred_labels);
+			if (nlhs==4)
+					accuracy = ml3.testML3(model,X,y,dec_values,pred_labels,pred_beta);
+			else
+					accuracy = ml3.testML3(model,X,y,dec_values,pred_labels);
 		}else if (nrhs==4){
 			std::vector<std::vector<VectorXf> > testLocalBeta;
 			mxArray *u;
@@ -116,7 +128,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 			accuracy = ml3.testML3(model,X,y,testLocalBeta,dec_values,pred_labels);
 		}
 		// SETS THE model AS AN OUTPUT FOR MATLAB
-		mu.setOutput(plhs,  nlhs, accuracy, pred_labels, dec_values, category);
+		mu.setOutput(plhs,  nlhs, accuracy, pred_labels, dec_values, pred_beta, category);
 	}else  if(category==mxDOUBLE_CLASS) {
 		double *val;
 		double accuracy;
@@ -134,11 +146,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		const Map<MatrixXd> X(dX,xdim,xlen);
 
 		const uint &C=model.nCla;
+		const uint &m=model.m;
 		MatrixXd dec_values(xlen,C);
+		MatrixXd pred_beta(blen,m);
 		ArrayXi pred_labels(xlen);
 
 		if (nrhs==3){
-			accuracy = ml3.testML3(model,X,y,dec_values,pred_labels);
+			if (nlhs==4)
+				accuracy = ml3.testML3(model,X,y,dec_values,pred_labels,pred_beta);
+			else
+				accuracy = ml3.testML3(model,X,y,dec_values,pred_labels);
 		}else if (nrhs==4){
 			std::vector<std::vector<VectorXd> > testLocalBeta;
 			mxArray *u;
@@ -163,7 +180,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		}
 
 		// SETS THE model AS AN OUTPUT FOR MATLAB
-		mu.setOutput(plhs,  nlhs, accuracy, pred_labels, dec_values , category);
+		mu.setOutput(plhs,  nlhs, accuracy, pred_labels, dec_values , pred_beta, category);
 	}else{
 		mexErrMsgTxt("The only supported datatypes are single and double precision floating point.\n");
 	}
