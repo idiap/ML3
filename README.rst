@@ -4,12 +4,12 @@ ML3 - Open source implementation of the ML3 classifier
 Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
 Written by Marco Fornoni <marco.fornoni@idiap.ch>
 
-Idiap Research Institute,
-Centre du Parc, P.O. Box 592,
-Rue Marconi 19,
-1920 Martigny, Switzerland
-Telephone: +41 27 721 77 57
-Fax: +41 27 721 77 12
+| Idiap Research Institute,
+| Centre du Parc, P.O. Box 592,
+| Rue Marconi 19,
+| 1920 Martigny, Switzerland
+| Telephone: +41 27 721 77 57
+| Fax: +41 27 721 77 12
 
 This file is part of the ML3 Software.
 
@@ -24,6 +24,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with ML3. If not, see <http://www.gnu.org/licenses/>.
+
 
 About
 -----
@@ -58,21 +59,17 @@ In order to use the Software you need to:
 
   $ sudo apt-get install libeigen3-dev
 
-
 1) compile ML3 for your architecture, using::
 
   $ make 
-
 
 2) from MATLAB, instantiate the ML3 algorithm using::
 
   algo=ML3();
 
-
 3) train the algorithm using::
 
   model=algo.train(features,labels);
-
 
 4) test the algorithm using::
 
