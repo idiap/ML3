@@ -28,12 +28,12 @@
 #  Marco Fornoni, October 7th 2013
 ##########################################################################
 
-# Tries to automatically detect matlab path\
-  If it fails you should replace it with the proper path
+# Tries to automatically detect matlab path
+# If it fails you should replace it with the proper path
 MATLABDIR ?= `readlink -m \`which matlab\`|head -c -12`
 
-# Makes use of the default eigen3 installation path\
-  Replace it with the proper path on your machine if it's different
+# Makes use of the default eigen3 installation path
+# Replace it with the proper path on your machine if it's different
 EIGEN_INC_PATH ?= /usr/include/eigen3
 
 MEX = $(MATLABDIR)/bin/mex
