@@ -69,17 +69,17 @@ Cite ML3
 --------
 If you find this software useful, please cite:
 
-	@INPROCEEDINGS{Fornoni_ACML2013_2013,
-         author = {Fornoni, Marco and Caputo, Barbara and Orabona, Francesco},
-         editor = {Ong, Cheng Soon and Ho, Tu-Bao},
-       keywords = {Latent SVM, Locally Linear Support Vector Machines, multiclass classification},
-       projects = {Idiap},
-          title = {Multiclass Latent Locally Linear Support Vector Machines},
-      booktitle = {JMLR W\&CP, Volume 29: Asian Conference on Machine Learning},
-           year = {2013},
-          pages = {229-244},
-       location = {Canberra, Australia},
-           issn = {1938-7228},
-            url = {http://jmlr.org/proceedings/papers/v29/},
-            pdf = {http://publications.idiap.ch/downloads/papers/2013/Fornoni_ACML2013_2013.pdf}
+@INPROCEEDINGS{Fornoni_ACML2013_2013,
+author = {Fornoni, Marco and Caputo, Barbara and Orabona, Francesco},
+editor = {Ong, Cheng Soon and Ho, Tu-Bao},
+keywords = {Latent SVM, Locally Linear Support Vector Machines, multiclass classification},
+projects = {Idiap},
+title = {Multiclass Latent Locally Linear Support Vector Machines},
+booktitle = {JMLR W\&CP, Volume 29: Asian Conference on Machine Learning},
+year = {2013},
+pages = {229-244},
+location = {Canberra, Australia},
+issn = {1938-7228},
+url = {http://jmlr.org/proceedings/papers/v29/},
+pdf = {http://publications.idiap.ch/downloads/papers/2013/Fornoni_ACML2013_2013.pdf}
 }
