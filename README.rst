@@ -1,10 +1,5 @@
-Open source implementation of the ML3 classifier.
-
-If you find this software useful, please cite:
-
-"Multiclass Latent Locally Linear Support Vector Machines"
-Marco Fornoni, Barbara Caputo and Francesco Orabona
-JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013 Proceedings)
+ML3 - Open source implementation of the ML3 classifier
+======================================================
 
 Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
 Written by Marco Fornoni <marco.fornoni@idiap.ch>
@@ -30,8 +25,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ML3. If not, see <http://www.gnu.org/licenses/>.
 
----------------------------------------------------------------
+About
+-----
+Kernelized Support Vector Machines (SVM) have gained the status of off-the-shelf
+ classifiers, able to deliver state of the art performance on almost any problem. 
+Still, their practical use is constrained by their computational and memory 
+complexity, which grows super-linearly with the number of training samples. 
+In order to retain the low training and testing complexity of linear classifiers 
+and the exibility of non linear ones, a growing, promising alternative is 
+represented by methods that learn non-linear classifiers through local combinations 
+of linear ones. 
 
+ML3 can learn complex decision functions (traditionally given by kernels) 
+through the use of locally linear decision functions. Differently from kernel 
+classifiers, ML3 makes use of a set of linear models that are locally linearly 
+combined to form a non-linear decision boundary in the input space. 
+Thanks to the latent formulation, the combination coefficients are modeled as
+ latent variables and efficiently estimated using an analytic solution. 
+
+
+Implementation
+--------------
 This is a mixed C++ and MATLAB (c) implementation of the ML3 
 algorithm, with the main algorithm being implemented in a mex file. 
 It is develped under Ubuntu 12.10, Matlab R2013a and it makes use
@@ -50,3 +64,22 @@ In order to use the Software you need to:
 	model=algo.train(features,labels);
 4) test the algorithm using: 
 	[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
+
+Cite ML3
+--------
+If you find this software useful, please cite:
+
+	@INPROCEEDINGS{Fornoni_ACML2013_2013,
+         author = {Fornoni, Marco and Caputo, Barbara and Orabona, Francesco},
+         editor = {Ong, Cheng Soon and Ho, Tu-Bao},
+       keywords = {Latent SVM, Locally Linear Support Vector Machines, multiclass classification},
+       projects = {Idiap},
+          title = {Multiclass Latent Locally Linear Support Vector Machines},
+      booktitle = {JMLR W\&CP, Volume 29: Asian Conference on Machine Learning},
+           year = {2013},
+          pages = {229-244},
+       location = {Canberra, Australia},
+           issn = {1938-7228},
+            url = {http://jmlr.org/proceedings/papers/v29/},
+            pdf = {http://publications.idiap.ch/downloads/papers/2013/Fornoni_ACML2013_2013.pdf}
+}
