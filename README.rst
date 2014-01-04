@@ -35,14 +35,18 @@ complexity, which grows super-linearly with the number of training samples.
 In order to retain the low training and testing complexity of linear classifiers 
 and the exibility of non linear ones, a growing, promising alternative is 
 represented by methods that learn non-linear classifiers through local combinations 
-of linear ones. 
+of linear ones.
 
 ML3 can learn complex decision functions (traditionally given by kernels) 
 through the use of locally linear decision functions. Differently from kernel 
 classifiers, ML3 makes use of a set of linear models that are locally linearly 
 combined to form a non-linear decision boundary in the input space. 
 Thanks to the latent formulation, the combination coefficients are modeled as 
-latent variables and efficiently estimated using an analytic solution. 
+latent variables and efficiently estimated using an analytic solution.
+
+ML3 has potential applications on large-scale problems, requiring powerful classifiers 
+and efficient learning methods, whose training complexity with respect to the number 
+of samples is not super-linear.
 
 
 Usage
@@ -51,9 +55,9 @@ This is a mixed C++ and MATLAB (c) implementation of the ML3
 algorithm, with the main algorithm being implemented in a mex file. 
 It is develped under Ubuntu 12.10, Matlab R2013a and it makes use
 of the Eigen 3.1 library ( http://http://eigen.tuxfamily.org ).
-Configurations differing from the above are not supported.
+Configurations differing from the above are not officially supported.
 
-In order to use the Software you need to:
+In order to use the software you need to:
 
 0) install the Eigen 3.1 library, using:
      $ sudo apt-get install libeigen3-dev
