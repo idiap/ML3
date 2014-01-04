@@ -59,15 +59,20 @@ Configurations differing from the above are not officially supported.
 
 In order to use the software you need to:
 
-0. Install the Eigen 3.1 library, using `$ sudo apt-get install libeigen3-dev`
+1. Install the Eigen 3.1 library, using:
+    `$ sudo apt-get install libeigen3-dev`
 
-1. Compile ML3 for your architecture, using `$ make`
+2. Compile ML3 for your architecture, using 
+    `$ make`
 
-2. From MATLAB, instantiate the ML3 algorithm using `algo=ML3();`
+3. From MATLAB, instantiate the ML3 algorithm using 
+    `algo=ML3();`
 
-3. Train the algorithm using `model=algo.train(features,labels);`
+4. Train the algorithm using
+    `model=algo.train(features,labels);`
 
-4. Test the algorithm using `[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);`
+5. Test the algorithm using 
+    `[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);`
 
 
 Cite ML3
