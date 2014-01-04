@@ -1,5 +1,5 @@
-ML3 - Open source implementation of the ML3 classifier
-======================================================
+Open source implementation of the ML3 classifier
+================================================
 
 Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
 Written by Marco Fornoni <marco.fornoni@idiap.ch>
