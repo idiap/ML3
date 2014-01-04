@@ -44,8 +44,8 @@ Thanks to the latent formulation, the combination coefficients are modeled as
 latent variables and efficiently estimated using an analytic solution. 
 
 
-Implementation
---------------
+Usage
+-----
 This is a mixed C++ and MATLAB (c) implementation of the ML3 
 algorithm, with the main algorithm being implemented in a mex file. 
 It is develped under Ubuntu 12.10, Matlab R2013a and it makes use
@@ -55,15 +55,15 @@ Configurations differing from the above are not supported.
 In order to use the Software you need to:
 
 0) install the Eigen 3.1 library, using:
-	sudo apt-get install libeigen3-dev
+  $ sudo apt-get install libeigen3-dev
 1) compile ML3 for your architecture, using: 
-	make 
+  $ make 
 2) from MATLAB, instantiate the ML3 algorithm using: 
-	algo=ML3();
+  algo=ML3();
 3) train the algorithm using: 
-	model=algo.train(features,labels);
+  model=algo.train(features,labels);
 4) test the algorithm using: 
-	[dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
+  [dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
 
 Cite ML3
 --------
