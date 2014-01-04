@@ -1,9 +1,9 @@
 Open source implementation of the ML3 classifier
 ================================================
 
-Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
-Written by Marco Fornoni <marco.fornoni@idiap.ch>
-
+| Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
+| Written by Marco Fornoni <marco.fornoni@idiap.ch>
+|
 | Idiap Research Institute,
 | Centre du Parc, P.O. Box 592,
 | Rue Marconi 19,
