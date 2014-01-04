@@ -44,9 +44,9 @@ combined to form a non-linear decision boundary in the input space.
 Thanks to the latent formulation, the combination coefficients are modeled as 
 latent variables and efficiently estimated using an analytic solution.
 
-ML3 has potential applications on large-scale problems, requiring powerful classifiers 
-and efficient learning methods, whose training complexity with respect to the number 
-of samples is not super-linear.
+ML3 has potential applications on large-scale problems, requiring powerful 
+classifiers and efficient learning methods, whose training complexity with 
+respect to the number of samples is not super-linear.
 
 
 Usage
