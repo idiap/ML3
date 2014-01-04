@@ -58,21 +58,26 @@ In order to use the Software you need to:
 
   $ sudo apt-get install libeigen3-dev
 
+
 1) compile ML3 for your architecture, using::
 
   $ make 
+
 
 2) from MATLAB, instantiate the ML3 algorithm using::
 
   algo=ML3();
 
+
 3) train the algorithm using::
 
   model=algo.train(features,labels);
 
+
 4) test the algorithm using::
 
   [dec_values,predict_labels,accuracy,confusion]=algo.test(features,labels,model);
+
 
 Cite ML3
 --------
