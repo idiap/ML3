@@ -56,7 +56,7 @@ Configurations differing from the above are not supported.
 In order to use the Software you need to:
 
 0) install the Eigen 3.1 library, using:
-     $ sudo apt-get install libeigen3-dev...
+     $ sudo apt-get install libeigen3-dev
 
 1) compile ML3 for your architecture, using:
      $ make 
