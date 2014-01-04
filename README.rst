@@ -27,8 +27,8 @@ along with ML3. If not, see <http://www.gnu.org/licenses/>.
 
 About
 -----
-Kernelized Support Vector Machines (SVM) have gained the status of off-the-shelf
- classifiers, able to deliver state of the art performance on almost any problem. 
+Kernelized Support Vector Machines (SVM) have gained the status of off-the-shelf 
+classifiers, able to deliver state of the art performance on almost any problem. 
 Still, their practical use is constrained by their computational and memory 
 complexity, which grows super-linearly with the number of training samples. 
 In order to retain the low training and testing complexity of linear classifiers 
@@ -40,8 +40,8 @@ ML3 can learn complex decision functions (traditionally given by kernels)
 through the use of locally linear decision functions. Differently from kernel 
 classifiers, ML3 makes use of a set of linear models that are locally linearly 
 combined to form a non-linear decision boundary in the input space. 
-Thanks to the latent formulation, the combination coefficients are modeled as
- latent variables and efficiently estimated using an analytic solution. 
+Thanks to the latent formulation, the combination coefficients are modeled as 
+latent variables and efficiently estimated using an analytic solution. 
 
 
 Implementation
