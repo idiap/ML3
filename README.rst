@@ -1,5 +1,5 @@
-Open source implementation of the ML3 classifier
-================================================
+ML3 - Multiclass Latent Locally Linear SVM
+==========================================
 
 | Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
 | Written by Marco Fornoni <marco.fornoni@idiap.ch>
