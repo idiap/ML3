@@ -55,7 +55,7 @@ Usage
 This is a mixed C++ and MATLAB (c) implementation of the ML3 
 algorithm, with the main algorithm being implemented in a mex file. 
 It is develped under Ubuntu 12.10, Matlab R2013a and it makes use
-of the Eigen 3.1 library ( http://http://eigen.tuxfamily.org ).
+of the `Eigen 3.1 library <http://eigen.tuxfamily.org>`_.
 Configurations differing from the above are not officially supported.
 
 In order to use the software you need to:
