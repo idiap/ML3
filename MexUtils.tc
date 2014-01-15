@@ -196,7 +196,7 @@ void MexUtils<T>::setOutput(mxArray * plhs[], const Model<T> model, const mxClas
 	temp = mxCreateNumericMatrix(maxIter, 1, category,  mxREAL);
 	tData = (T*) mxGetData(temp);
 	for (uint i=0;i<maxIter;i++){
-		tData[i] = model.totLoss(i);
+		tData[i] = model.avgLoss(i);
 	}
 	mxSetField(plhs[0], 0, model.fnames[12], temp);
 

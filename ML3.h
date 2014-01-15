@@ -60,11 +60,11 @@ public:
 	void trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const MatrixXT& Xte,const ArrayXi& yte, bool testAllEpochs);
 
 	// Tests a trained ML3 model and returns the accuracy
-	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, T &totLoss, const bool fixedBeta, const bool computeLoss, MatrixXT &dec_values, ArrayXi &pred_labels, const bool computeBeta, MatrixXT &pred_beta);
-	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels, T &totLoss);
+	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, T &avgLoss, const bool fixedBeta, const bool computeLoss, MatrixXT &dec_values, ArrayXi &pred_labels, const bool computeBeta, MatrixXT &pred_beta);
+	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels, T &avgLoss);
 	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels, MatrixXT &pred_beta);
 	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels);
-	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, T &totLoss);
+	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, T &avgLoss);
 	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, MatrixXT &pred_beta);
 	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels);
 	T testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y);

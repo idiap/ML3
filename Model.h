@@ -57,7 +57,7 @@ public:
 	std::vector<MatrixXT> W2;
 	MatrixXT localBetaClass;
 
-	VectorXT totLoss;
+	VectorXT avgLoss;
 	VectorXT ael;
 	VectorXT loss;
 	VectorXT obj;

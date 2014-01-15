@@ -175,7 +175,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	std::vector<MatrixXT>  &W2=model.W2;
 	MatrixXT &localBetaClass=model.localBetaClass;
 
-	VectorXT &totLoss=model.totLoss;
+	VectorXT &avgLoss=model.avgLoss;
 	VectorXT &ael=model.ael;
 	VectorXT &loss=model.loss;
 	VectorXT &obj=model.obj;
@@ -307,7 +307,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 			scores(yt)=-INFINITY;
 			margin_wrong=scores.maxCoeff(&y_wrong);
 			sampLoss= std::max((const T)(1 - (margin_true - margin_wrong)*reg_c), (const T)0);
-			totLoss(iter)+=sampLoss;
+			avgLoss(iter)+=sampLoss;
 
 			// FAST IMPLEMENTATION
 			// IF A LOSS IS SUFFERED, THE OPTIMAL BETA
@@ -385,7 +385,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 		}
 
 		// OUTPUTS SOME VISUALIZATIONS
-		ael(iter)=totLoss(iter)/n;
+		ael(iter)=avgLoss(iter)/n;
 		if (verbose==2){
 			MatrixXT dec_values(n,C);
 			ArrayXi pred_labels(n);
@@ -421,7 +421,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 }
 
 template<typename T>
-T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, T &totLoss, const bool fixedBeta, const bool computeLoss, MatrixXT &dec_values, ArrayXi &pred_labels, const bool computeBeta, MatrixXT &pred_beta){
+T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, T &avgLoss, const bool fixedBeta, const bool computeLoss, MatrixXT &dec_values, ArrayXi &pred_labels, const bool computeBeta, MatrixXT &pred_beta){
 	ArrayXT scores, c;
 	VectorXT Xt, f, betaClass;
 	std::vector<VectorXT> localBeta;
@@ -497,12 +497,13 @@ T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, co
 			margin_true=scores(y(i));
 			scores(y(i))=-INFINITY;
 			margin_wrong=scores.maxCoeff();
-			totLoss+=std::max((const T)(1 - (margin_true - margin_wrong)), (const T)0);
+			avgLoss+=std::max((const T)(1 - (margin_true - margin_wrong)), (const T)0);
 		}
 		pred_labels(i)=(uint)pred;
 		dec_values.row(i)=scores;
 	}
 	accuracy= ((T)(pred_labels.cwiseEqual(y).count()))/n;
+	avgLoss=avgLoss/n;
 	return accuracy;
 }
 
@@ -516,44 +517,44 @@ T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y){
 }
 
 template<typename T>
-T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, T &totLoss){
+T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, T &avgLoss){
 	std::vector<std::vector<VectorXT> > testLocalBeta;
 	const uint n  = X.cols();
 	const uint &m = model.m;
 	MatrixXT pred_beta(n,m);
-	return testML3(model, X, y, testLocalBeta, totLoss, false, true,dec_values, pred_labels, false, pred_beta);
+	return testML3(model, X, y, testLocalBeta, avgLoss, false, true,dec_values, pred_labels, false, pred_beta);
 }
 
 template<typename T>
 T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels, MatrixXT &pred_beta){
-	T totLoss=0.;
+	T avgLoss=0.;
 	std::vector<std::vector<VectorXT> > testLocalBeta;
-	return testML3(model, X, y, testLocalBeta, totLoss, false, false,dec_values, pred_labels, true, pred_beta);
+	return testML3(model, X, y, testLocalBeta, avgLoss, false, false,dec_values, pred_labels, true, pred_beta);
 }
 
 template<typename T>
 T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y,MatrixXT &dec_values, ArrayXi &pred_labels){
-	T totLoss=0.;
+	T avgLoss=0.;
 	std::vector<std::vector<VectorXT> > testLocalBeta;
 	const uint n  = X.cols();
 	const uint &m = model.m;
 	MatrixXT pred_beta(n,m);
-	return testML3(model, X, y, testLocalBeta, totLoss, false, false,dec_values, pred_labels, false, pred_beta);
+	return testML3(model, X, y, testLocalBeta, avgLoss, false, false,dec_values, pred_labels, false, pred_beta);
 }
 
 template<typename T>
 T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels){
-	T totLoss=0.;
+	T avgLoss=0.;
 	const uint n  = X.cols();
 	const uint &m = model.m;
 	MatrixXT pred_beta(n,m);
-	return testML3(model, X, y, testLocalBeta, totLoss, true, false,dec_values, pred_labels, false, pred_beta);
+	return testML3(model, X, y, testLocalBeta, avgLoss, true, false,dec_values, pred_labels, false, pred_beta);
 }
 
 template<typename T>
-T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels, T &totLoss){
+T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, const std::vector<std::vector<VectorXT> > &testLocalBeta, MatrixXT &dec_values, ArrayXi &pred_labels, T &avgLoss){
 	const uint n  = X.cols();
 	const uint &m = model.m;
 	MatrixXT pred_beta(n,m);
-	return testML3(model, X, y, testLocalBeta, totLoss, true, true, dec_values, pred_labels, false, pred_beta);
+	return testML3(model, X, y, testLocalBeta, avgLoss, true, true, dec_values, pred_labels, false, pred_beta);
 }

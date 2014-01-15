@@ -80,7 +80,7 @@ void Model<T>::setParams(std::vector<MatrixXT> _W, std::vector<MatrixXT> _W2, Ma
 
 	uint maxIter=maxCCCPIter+initStep;
 
-	totLoss=VectorXT::Zero(maxIter);
+	avgLoss=VectorXT::Zero(maxIter);
 	ael=VectorXT::Zero(maxIter);
 	loss=VectorXT::Zero(maxIter);
 	obj=VectorXT::Zero(maxIter);
@@ -105,7 +105,7 @@ const char *Model<T>::fnames[]=
 		"s",
 		"averaging",
 		"initStep",
-		"totLoss",
+		"avgLoss",
 		"ael",
 		"loss",
 		"obj",
