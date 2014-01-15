@@ -407,13 +407,15 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 #endif
 
 		//TESTS THE TRAINED MODEL ON THE TESTING SET
-		if (testAllEpochs && verbose >= 1){
+		if (testAllEpochs){
 			accuracyTe = testML3(model,Xte,yte);
-			std::cout<<"TeAcc: "<<accuracyTe*100<<std::endl;
 			teAcc(iter)=accuracyTe;
+			if (verbose >= 1){
+				std::cout<<"TeAcc: "<<accuracyTe*100<<std::endl;
 #ifdef mex_h
 			mexEvalString("drawnow");
 #endif
+			}
 		}
 	}
 }
