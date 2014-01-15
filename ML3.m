@@ -176,7 +176,7 @@ classdef ML3 < handle
             model.returnLocalBeta=logical(returnLocalBeta);
             
             maxEpochs=maxCCCPIter+initStep;
-            model.totLoss=zeros(maxEpochs,1);
+            model.avgLoss=zeros(maxEpochs,1);
             model.ael=zeros(maxEpochs,1);
             model.loss=zeros(maxEpochs,1);
             model.obj=zeros(maxEpochs,1);
