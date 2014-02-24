@@ -45,8 +45,8 @@ public:
 	typedef Matrix< T, Dynamic, 1>  VectorXT;
 	typedef Array< T, Dynamic, 1>  ArrayXT;
 
-	// Trains a k-means model using X, m cluster centers, for a maximum of maxIter epochs, storing the cluster centers in M and the sample assignments in assign
-	static void trainKM(const MatrixXT &X, const uint m, const uint maxIter, MatrixXT& M, ArrayXi& assign, const uint verbose);
+	// Trains a k-means model using X, m cluster centers, for a maximum of maxIter epochs, storing the cluster centers in M
+	static void trainKM(const MatrixXT &X, const uint m, const uint maxIter, const uint verbose, MatrixXT& M);
 
 	//Empty constructor
 	KM(){}

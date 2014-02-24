@@ -150,10 +150,10 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	ArrayXT nW, rand_id, scores, CListMax, CListFix;
 	ArrayXi kmAssign;
 	VectorXT Xt, f, f_old, localBetaYt, localBetaYwrong;
-	MatrixXT tmpMat;
+	MatrixXT W_INIT;
 	std::vector<MatrixXT> W_OLD;
 
-	typename VectorXT::Index y_wrong;
+	typename VectorXT::Index y_wrong, ii;
 
 	const uint &initStep=model.initStep;
 	const uint &m=model.m;
@@ -201,22 +201,22 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	if (verbose>0)
 		std::cout << std::endl << model << std::endl;
 
-	// COMPUTES THE INITIAL WEIGTH MATRIX tmpMat (SHARED FOR ALL THE CLASSES)
+	// COMPUTES THE INITIAL WEIGTH MATRIX W_INIT (SHARED FOR ALL THE CLASSES)
 	// IF THE REQUESTED NUMBER OF K-MEANS INITIALIZATION ITERATIONS IS GRATER THAN ZERO
-	// IT INITIALIZES tmpMat USING K-MEANS. OTHERWISE IT INITIALIZES tmpMat RANDOMLY
+	// IT INITIALIZES W_INIT USING K-MEANS. OTHERWISE IT INITIALIZES W_INIT RANDOMLY
 	if(maxKMIter>0){
 		KM<T> km=KM<T>();
-		km.trainKM(X, m, maxKMIter, tmpMat, kmAssign, verbose);
+		km.trainKM(X, m, maxKMIter, verbose, W_INIT);
 	}else{
 		// RESEEDS THE NUMBER GENERATOR
 		std::srand(0);
 		// COMPUTES THE INITIAL WEIGTHS
-		tmpMat=MatrixXT::Random(m,d);
+		W_INIT=MatrixXT::Random(m,d);
 	}
 	
-	//INITIALIZES W_OLD WITH tmpMat (FOR ALL THE CLASSES)
+	//INITIALIZES W_OLD WITH W_INIT (FOR ALL THE CLASSES)
 	for(uint c=0; c<C; c++){
-		W_OLD.push_back(tmpMat);
+		W_OLD.push_back(W_INIT);
 	}
 
 	ael(0)=1;
@@ -242,7 +242,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 		projections=0;
 
 		//SAVES THE PREVIOUS SOLUTION IN ORDER TO BE ABLE TO COMPUTE THE FIRST-ORDER TAYLOR APPROXIMATION OF THE SCORE
-		if (iter>0){
+		if (iter>0 && !init){
 			for(uint c=0; c<C; c++){
 				W_OLD[c]=W[c];
 			}
@@ -258,20 +258,23 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 			if (init){
 				if(maxKMIter>0){
 					//IF THE REQUESTED NUMBER OF K-MEANS INITIALIZATION ITERATIONS IS GRATER THAN ZERO
-					//IT INITALIZES localBetaYt USING THE SAMPLE-TO-MODEL ASSIGNEMENTS RETURNED BY K-MEANS
+					//IT INITALIZES localBetaYt USING THE CLUSTER CENTERS RETURNED BY K-MEANS
+					f=W_INIT.array().square().rowwise().sum().matrix()-2*W_INIT*Xt;
+					f.minCoeff(&ii);
 					localBetaYt=VectorXT::Zero(m);
-					localBetaYt(kmAssign(it))=1;
+					localBetaYt(ii)=tau;
 				}else{
 					//OTHERWISE IT INITIALIZES THEM RANDOMLY
 					localBetaYt=VectorXT::Random(m).cwiseAbs();
-				}
-				if (p==1){
-					simplexProj(localBetaYt, localBetaYt, tau, p, false);
-				}
-				else{
-					// THIS PROJECTION IS NOT OPTIMAL
-					// BUT PROVIDES A FEASIBLE RANDOM STARTING POINT
-					localBetaYt = localBetaYt * std::min((const T)1,(const T)(tau/pow(localBetaYt.array().abs().pow(p).sum(),1/p)));
+					//AND PROJECTS THEM INTO OMEGA_P
+					if (p==1){
+						simplexProj(localBetaYt, localBetaYt, tau, p, false);
+					}
+					else{
+						// THIS PROJECTION IS NOT OPTIMAL
+						// BUT PROVIDES A FEASIBLE RANDOM STARTING POINT
+						localBetaYt = localBetaYt * std::min((const T)1,(const T)(tau/pow(localBetaYt.array().abs().pow(p).sum(),1/p)));
+					}
 				}
 				for(uint cc=0; cc<C;cc++){
 					f.noalias()=W[cc]*Xt;

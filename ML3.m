@@ -67,11 +67,7 @@ classdef ML3 < handle
         maxKMIter           % the maximum number of k-means epochs used to
                             % initialize W and, consequently, the cluster
                             % centers (default is 0, i.e. k-means is not
-                            % performed). 
-                            % Note that in order to use the initialized W
-                            % in the stochastic training algorithm, s0 must
-                            % be greater than zero (e.g. equal to the
-                            % number of training samples)
+                            % performed)
     end
     
     methods
@@ -221,11 +217,7 @@ classdef ML3 < handle
             % maxKMIter           the maximum number of k-means epochs used to
             %                     initialize W and, consequently, the cluster
             %                     centers (default is 0, i.e. k-means is not
-            %                     performed).
-            %                     Note that in order to use the initialized W
-            %                     in the stochastic training algorithm, s0 must
-            %                     be greater than zero (e.g. equal to the
-            %                     number of training samples)
+            %                     performed)
             %
             % initStep            if true, the first epoch is run as a
             %                     normal SVM (with all the local
@@ -269,7 +261,7 @@ classdef ML3 < handle
             if ~exist('initStep','var')
                 initStep=1;
             end
-            if ~exist('s0','var')
+            if ~exist('s0','var') || (ischar(s0) && strcmp(s0,'auto'))
                 s0=0;
             end
             if ~exist('verbose','var')
@@ -283,18 +275,6 @@ classdef ML3 < handle
             end
             if ~exist('yte','var')
                 yte=[];
-            end
-            
-            % if s0 is 'auto'
-            if ischar(s0) && strcmp(s0,'auto')
-                % if some k-means iterations are performed, then s0 is set
-                % to twice the number of training samples. Otherwise it is
-                % set to 0.
-                if maxKMIter>0
-                    s0=2*numel(y);
-                else
-                    s0=0;
-                end
             end
             
             % labels are expected to be between 0 and C-1
