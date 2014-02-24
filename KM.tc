@@ -67,7 +67,7 @@ void KM<T>::trainKM(const MatrixXT &X, const uint m, const uint maxIter, MatrixX
 	eps=1e-3;
 
 	//MAIN K-MEANS LOOP
-	for(uint iter=1; iter<=maxIter; iter++){
+	for(uint iter=0; iter<maxIter; iter++){
 		//SAVES THE PREVIOUS SOLUTION IN ORDER TO BE ABLE TO COMPUTE THE distances for each sample
 		M_OLD=M;
 		M=MatrixXT::Zero(m,d);
@@ -100,7 +100,7 @@ void KM<T>::trainKM(const MatrixXT &X, const uint m, const uint maxIter, MatrixX
 		
 		//IF NECESSARY OUTPUT SOME LOG INFORMATION
 		if (verbose>0)
-			std::cout<<"#KM-iter "<<iter<<"/"<<maxIter<<", rel-diff:"<<nrmDiff<<std::endl;
+			std::cout<<"#KM-iter "<<iter<<"/"<<(maxIter-1)<<", rel-diff:"<<nrmDiff<<std::endl;
 		
 		//IF THE RELATIVE NORM OF THE DIFFERENCE BETWEEN THE PREVIOUS SOLUTION AND THE PRESENT ONE, nrmDiff 
 		//IS LOWER THAN A CERTAIN DESIRED PRECISION eps, IT TERMINATES THE K-MEANS ALGORITHM
