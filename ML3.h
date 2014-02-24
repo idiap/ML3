@@ -39,6 +39,7 @@
 #include <float.h>
 
 #include "Model.h"
+#include "KM.h"
 
 using namespace Eigen;
 

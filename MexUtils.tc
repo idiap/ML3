@@ -116,6 +116,7 @@ void MexUtils<T>::setOutput(mxArray * plhs[], const Model<T> model, const mxClas
 	uint nCla=model.nCla;
 	uint m=model.m;
 	uint nSamp=model.nSamp;
+	uint maxKMIter=model.maxKMIter;
 	uint maxCCCPIter=model.maxCCCPIter;
 	uint initStep=model.initStep;
 	uint maxIter=maxCCCPIter+initStep;
@@ -277,6 +278,11 @@ void MexUtils<T>::setOutput(mxArray * plhs[], const Model<T> model, const mxClas
 
 	temp = mxCreateLogicalScalar(model.returnLocalBeta);
 	mxSetField(plhs[0], 0, model.fnames[22], temp);
+
+	temp = mxCreateNumericArray(2,scalar,mxUINT32_CLASS,mxREAL);
+	uival = (uint*) mxGetData(temp);
+	uival[0]=maxKMIter;
+	mxSetField(plhs[0], 0, model.fnames[23], temp);
 }
 
 template<typename T>
@@ -284,7 +290,7 @@ void MexUtils<T>::load_mex_model(const mxArray *prhs, Model<T> &model) {
 
 	T lambda, p, tau;
 	bool averaging, returnLocalBeta;
-	uint s, initStep, maxCCCPIter, pass, nCla, nSamp, nFeats, m, verbose;
+	uint s, initStep, maxCCCPIter, maxKMIter, pass, nCla, nSamp, nFeats, m, verbose;
 
 	typedef typename Model<T>::MatrixXT MatrixXT;
 
@@ -396,9 +402,13 @@ void MexUtils<T>::load_mex_model(const mxArray *prhs, Model<T> &model) {
 	v = mxGetField(prhs, 0, Model<T>::fnames[22]);
 	bval = (bool *)mxGetData(v);
 	returnLocalBeta = *(bval);
+	
+	v = mxGetField(prhs, 0, Model<T>::fnames[23]);
+	uival = (uint *) mxGetData(v);
+	maxKMIter = (uint)*(uival);
 
 	localBetaClass= (returnLocalBeta)?MatrixXT::Zero(m,nSamp):MatrixXT::Zero(0,0);
 
-	model.setParams(W, W2, localBetaClass, lambda, p, tau, maxCCCPIter, m, averaging, initStep, s, verbose, returnLocalBeta);
+	model.setParams(W, W2, localBetaClass, lambda, p, tau, maxCCCPIter, m, averaging, maxKMIter, initStep, s, verbose, returnLocalBeta);
 	model.nSamp=nSamp;
 }

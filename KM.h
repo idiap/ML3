@@ -24,61 +24,39 @@
  * You should have received a copy of the GNU General Public License
  * along with ML3. If not, see <http://www.gnu.org/licenses/>.
  *
- * Model.h
+ * KM.h
  *
- * Class representing a ML3 model
- *
- *  Created on: Apr 20, 2013
+ *  Created on: Feb 24, 2014
  *      Author: Marco Fornoni
  */
 
-#ifndef MODEL_H_
-#define MODEL_H_
+#ifndef KM_H_
+#define KM_H_
 
-
-#include <Eigen/Dense>
-#include <vector>
+//#include "ML3.h"
 
 using namespace Eigen;
 
 template<typename T>
-class Model {
+class KM {
 public:
 	// The internal representation of W
 	typedef Matrix< T, Dynamic, Dynamic >  MatrixXT;
 	typedef Matrix< T, Dynamic, 1>  VectorXT;
+	typedef Array< T, Dynamic, 1>  ArrayXT;
 
-	// The internal representation of W
-	T lambda, p, tau, trTime;
-	bool averaging, returnLocalBeta;
-	uint s, initStep, maxKMIter, iter, maxCCCPIter, nCla, nSamp, nFeats, m, verbose;
+	// Trains a k-means model using X, m cluster centers, for a maximum of maxIter epochs, storing the cluster centers in M and the sample assignments in assign
+	static void trainKM(const MatrixXT &X, const uint m, const uint maxIter, MatrixXT& M, ArrayXi& assign, const uint verbose);
 
-	std::vector<MatrixXT> W;
-	std::vector<MatrixXT> W2;
-	MatrixXT localBetaClass;
+	//Empty constructor
+	KM(){}
 
-	VectorXT avgLoss;
-	VectorXT ael;
-	VectorXT loss;
-	VectorXT obj;
-	VectorXT teAcc;
-
-	static const char *fnames[24];
-
-	//Default constructor
-	Model();
-
-	//Default destructor
-	~Model();
-
-	//Main constructor
-	Model(std::vector<MatrixXT> _W, std::vector<MatrixXT> _W2, MatrixXT _localBetaClass,  T _lambda, T _p, T _tau, uint _maxCCCPIter, T _nRep, bool _averaging, uint _maxKMIter, uint _initStep, uint _s0, uint _verbose, bool _returnLocalBeta);
-
-	//Main setter method
-	void setParams(std::vector<MatrixXT> _W, std::vector<MatrixXT> _W2, MatrixXT _localBetaClass,  T _lambda, T _p, T _tau, uint _maxCCCPIter, T _nRep, bool _averaging, uint _maxKMIter, uint _initStep, uint _s0, uint _verbose, bool _returnLocalBeta);
-
+	//Empty distructor
+	~KM(){}
 };
 
-#include "Model.tc"
+#include "KM.tc"
 
-#endif /* MODEL_H_ */
+#endif /* KM_H_ */
+
+

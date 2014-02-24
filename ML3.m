@@ -63,6 +63,15 @@ classdef ML3 < handle
         addBias             % if true, adds a 1 at the end of each feature
                             % vector, to emulate learning of a bias (for
                             % each model)
+        
+        maxKMIter           % the maximum number of k-means epochs used to
+                            % initialize W and, consequently, the cluster
+                            % centers (default is 0, i.e. k-means is not
+                            % performed). 
+                            % Note that in order to use the initialized W
+                            % in the stochastic training algorithm, s0 must
+                            % be greater than zero (e.g. equal to the
+                            % number of training samples)
     end
     
     methods
@@ -95,6 +104,7 @@ classdef ML3 < handle
             newClassifier.lambda=lambda;
             newClassifier.p=p;
             
+            newClassifier.maxKMIter=uint32(0);
             newClassifier.maxCCCPIter=uint32(maxCCCPIter);
             newClassifier.m=uint32(m);
             newClassifier.verbose=uint32(1);
@@ -121,7 +131,7 @@ classdef ML3 < handle
             if obj.addBias
                 features(end+1,:)=obj.addBias;
             end
-            model=obj.trainModel(features,labels, obj.lambda,obj.m,obj.maxCCCPIter, obj.p,obj.averaging,obj.initStep,obj.s0,obj.verbose,obj.returnLocalBeta);
+            model=obj.trainModel(features,labels, obj.lambda,obj.m,obj.maxCCCPIter,obj.p,obj.averaging,obj.maxKMIter,obj.initStep,obj.s0,obj.verbose,obj.returnLocalBeta);
         end
         
         function [dec_values,predict_labels,accuracy,confusion,predict_beta]=test(obj,features,labels,model)
@@ -150,7 +160,7 @@ classdef ML3 < handle
     
     methods (Static)
         
-        function model=initModel(X,y,lambda,m,maxCCCPIter,p,averaging,initStep,s0,verbose,returnLocalBeta)
+        function model=initModel(X,y,lambda,m,maxCCCPIter,p,averaging,maxKMIter,initStep,s0,verbose,returnLocalBeta)
             %
             % PERFORMS INITIALIZATION OF THE MODEL
             
@@ -163,6 +173,7 @@ classdef ML3 < handle
             model.p=cast(p,targetClass);
             model.tau=cast(1,targetClass);
             
+            model.maxKMIter=uint32(maxKMIter);
             model.maxCCCPIter=uint32(maxCCCPIter);
             model.verbose=uint32(verbose);
             model.nCla=uint32(max(unique(y)));
@@ -184,7 +195,7 @@ classdef ML3 < handle
         end
         
         
-        function model=trainModel(X,y,lambda,m,maxCCCPIter,p,averaging,initStep,s0,verbose,returnLocalBeta,Xte,yte)
+        function model=trainModel(X,y,lambda,m,maxCCCPIter,p,averaging,maxKMIter,initStep,s0,verbose,returnLocalBeta,Xte,yte)
             %
             % TRAINS A ML3 MODEL
             %
@@ -198,14 +209,23 @@ classdef ML3 < handle
             %                     (by default 10)
             %
             % maxCCCPIter         maximum number of CCCP iterations
-            % 			  (by default 30)
+            %                     (by default 30)
             %
             % p                   defines which value of p-norm will be
-            %			  used (by default 1.5)
+            %                     used (by default 1.5)
             %
             % averaging           if true computes the average of the
             %                     solutions on the last epoch and uses it
             %                     as the final solution
+            %
+            % maxKMIter           the maximum number of k-means epochs used to
+            %                     initialize W and, consequently, the cluster
+            %                     centers (default is 0, i.e. k-means is not
+            %                     performed).
+            %                     Note that in order to use the initialized W
+            %                     in the stochastic training algorithm, s0 must
+            %                     be greater than zero (e.g. equal to the
+            %                     number of training samples)
             %
             % initStep            if true, the first epoch is run as a
             %                     normal SVM (with all the local
@@ -243,6 +263,9 @@ classdef ML3 < handle
             if ~exist('averaging','var')
                 averaging=true;
             end
+            if ~exist('maxKMIter','var')
+                maxKMIter=0;
+            end
             if ~exist('initStep','var')
                 initStep=1;
             end
@@ -260,6 +283,18 @@ classdef ML3 < handle
             end
             if ~exist('yte','var')
                 yte=[];
+            end
+            
+            % if s0 is 'auto'
+            if ischar(s0) && strcmp(s0,'auto')
+                % if some k-means iterations are performed, then s0 is set
+                % to twice the number of training samples. Otherwise it is
+                % set to 0.
+                if maxKMIter>0
+                    s0=2*numel(y);
+                else
+                    s0=0;
+                end
             end
             
             % labels are expected to be between 0 and C-1
@@ -281,7 +316,7 @@ classdef ML3 < handle
             end
             
             % performs initialization of the model
-            model=ML3.initModel(X,y,lambda,m,maxCCCPIter,p,averaging,initStep,s0,verbose,returnLocalBeta);
+            model=ML3.initModel(X,y,lambda,m,maxCCCPIter,p,averaging,maxKMIter,initStep,s0,verbose,returnLocalBeta);
             
             % trains the model using the provided mex file
             if isa(X,'double')
@@ -348,9 +383,9 @@ classdef ML3 < handle
             %
             
             ux = unique(x);
-            ux=reshape(ux,1,numel(ux));
+            ux = reshape(ux,1,numel(ux));
             uy = unique(y);
-            uy=reshape(uy,1,numel(uy));
+            uy = reshape(uy,1,numel(uy));
             
             c = zeros(numel(ux),numel(uy));
             for i = ux

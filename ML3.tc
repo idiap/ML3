@@ -148,6 +148,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	uint it, yt, updates, projections, cc;
 	T reg, reg_c, eta, margin_true, margin_wrong, sampLoss, nw, proj_c, accuracyTe;
 	ArrayXT nW, rand_id, scores, CListMax, CListFix;
+	ArrayXi kmAssign;
 	VectorXT Xt, f, f_old, localBetaYt, localBetaYwrong;
 	MatrixXT tmpMat;
 	std::vector<MatrixXT> W_OLD;
@@ -156,6 +157,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 
 	const uint &initStep=model.initStep;
 	const uint &m=model.m;
+	const uint &maxKMIter=model.maxKMIter;
 	const uint &maxCCCPIter=model.maxCCCPIter;
 	const uint &C=model.nCla;
 	const uint &verbose=model.verbose;
@@ -199,11 +201,21 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	if (verbose>0)
 		std::cout << std::endl << model << std::endl;
 
-	// RESEEDS THE NUMBER GENERATOR
-	std::srand(0);
-	// COMPUTES THE INITIAL WEIGTHS
-	tmpMat=MatrixXT::Random(m,d);
-	for(uint c=0; c<C;c++){
+	// COMPUTES THE INITIAL WEIGTH MATRIX tmpMat (SHARED FOR ALL THE CLASSES)
+	// IF THE REQUESTED NUMBER OF K-MEANS INITIALIZATION ITERATIONS IS GRATER THAN ZERO
+	// IT INITIALIZES tmpMat USING K-MEANS. OTHERWISE IT INITIALIZES tmpMat RANDOMLY
+	if(maxKMIter>0){
+		KM<T> km=KM<T>();
+		km.trainKM(X, m, maxKMIter, tmpMat, kmAssign, verbose);
+	}else{
+		// RESEEDS THE NUMBER GENERATOR
+		std::srand(0);
+		// COMPUTES THE INITIAL WEIGTHS
+		tmpMat=MatrixXT::Random(m,d);
+	}
+	
+	//INITIALIZES W_OLD WITH tmpMat (FOR ALL THE CLASSES)
+	for(uint c=0; c<C; c++){
 		W_OLD.push_back(tmpMat);
 	}
 
@@ -244,7 +256,15 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 			yt=y(it);
 
 			if (init){
-				localBetaYt=VectorXT::Random(m).cwiseAbs();
+				if(maxKMIter>0){
+					//IF THE REQUESTED NUMBER OF K-MEANS INITIALIZATION ITERATIONS IS GRATER THAN ZERO
+					//IT INITALIZES localBetaYt USING THE SAMPLE-TO-MODEL ASSIGNEMENTS RETURNED BY K-MEANS
+					localBetaYt=VectorXT::Zero(m);
+					localBetaYt(kmAssign(it))=1;
+				}else{
+					//OTHERWISE IT INITIALIZES THEM RANDOMLY
+					localBetaYt=VectorXT::Random(m).cwiseAbs();
+				}
 				if (p==1){
 					simplexProj(localBetaYt, localBetaYt, tau, p, false);
 				}
@@ -413,7 +433,7 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 			if (verbose >= 1){
 				std::cout<<"TeAcc: "<<accuracyTe*100<<std::endl;
 #ifdef mex_h
-			mexEvalString("drawnow");
+				mexEvalString("drawnow");
 #endif
 			}
 		}
@@ -492,7 +512,7 @@ T ML3<T>::testML3(const Model<T> &model, const MatrixXT &X, const ArrayXi &y, co
 		scores.maxCoeff(&pred);
 		if(computeBeta && !fixedBeta)
 			pred_beta.row(i)=localBeta[pred];
-		
+
 		if (computeLoss){
 			margin_true=scores(y(i));
 			scores(y(i))=-INFINITY;
