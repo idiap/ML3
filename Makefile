@@ -45,7 +45,7 @@ MATH_INC_PATH = $(MATLABDIR)/extern/include
 MATH_OBJ_PATH = $(MATLABDIR)/bin/glnxa64
 ML3_INC_PATH= $(shell pwd)
 
-HDR = Model.h Model.tc ML3.h ML3.tc MexUtils.h MexUtils.tc
+HDR = Model.h Model.tc ML3.h ML3.tc MexUtils.h MexUtils.tc KM.h KM.tc
 INC = -I$(MATH_INC_PATH) -I$(ML3_INC_PATH) -I$(EIGEN_INC_PATH)
 MEXSOURCE_TR_D = trainML3D.cc
 MEXSOURCE_TR_F = trainML3F.cc
