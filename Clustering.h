@@ -24,21 +24,21 @@
  * You should have received a copy of the GNU General Public License
  * along with ML3. If not, see <http://www.gnu.org/licenses/>.
  *
- * KM.h
+ * Clustering.h
  *
  *  Created on: Feb 24, 2014
  *      Author: Marco Fornoni
  */
 
-#ifndef KM_H_
-#define KM_H_
+#ifndef Clustering_H_
+#define Clustering_H_
 
 //#include "ML3.h"
 
 using namespace Eigen;
 
 template<typename T>
-class KM {
+class Clustering {
 public:
 	// The internal representation of W
 	typedef Matrix< T, Dynamic, Dynamic >  MatrixXT;
@@ -46,17 +46,17 @@ public:
 	typedef Array< T, Dynamic, 1>  ArrayXT;
 
 	// Trains a k-means model using X, m cluster centers, for a maximum of maxIter epochs, storing the cluster centers in M
-	static void trainKM(const MatrixXT &X, const uint m, const uint maxIter, const uint verbose, MatrixXT& M);
+	static void trainKMeans(const MatrixXT &X, const uint m, const uint maxIter, const uint verbose, MatrixXT& M);
 
 	//Empty constructor
-	KM(){}
+	Clustering(){}
 
 	//Empty distructor
-	~KM(){}
+	~Clustering(){}
 };
 
-#include "KM.tc"
+#include "Clustering.tc"
 
-#endif /* KM_H_ */
+#endif /* Clustering_H_ */
 
 

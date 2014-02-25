@@ -24,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ML3. If not, see <http://www.gnu.org/licenses/>.
  *
- * KM.tc
+ * Clustering.tc
  *
  *  Created on: Feb 24, 2014
  *      Author: Marco Fornoni
@@ -34,7 +34,7 @@ using namespace Eigen;
 
 
 template<typename T>
-void KM<T>::trainKM(const MatrixXT &X, const uint m, const uint maxIter, const uint verbose, MatrixXT& M){
+void Clustering<T>::trainKMeans(const MatrixXT &X, const uint m, const uint maxIter, const uint verbose, MatrixXT& M){
 	/*
 	 * Trains a k-means model using X, m cluster centers, for a maximum of maxIter epochs, 
 	 * storing the cluster centers in M.
@@ -95,7 +95,7 @@ void KM<T>::trainKM(const MatrixXT &X, const uint m, const uint maxIter, const u
 		
 		//IF NECESSARY OUTPUT SOME LOG INFORMATION
 		if (verbose>0)
-			std::cout<<"#KM-iter "<<iter<<"/"<<(maxIter-1)<<", rel-diff:"<<nrmDiff<<std::endl;
+			std::cout<<"#kmeans iter "<<iter<<"/"<<(maxIter-1)<<", rel-diff:"<<nrmDiff<<std::endl;
 		
 		//IF THE RELATIVE NORM OF THE DIFFERENCE BETWEEN THE PREVIOUS SOLUTION AND THE PRESENT ONE, nrmDiff 
 		//IS LOWER THAN A CERTAIN DESIRED PRECISION eps, IT TERMINATES THE K-MEANS ALGORITHM

@@ -205,8 +205,8 @@ void ML3<T>::trainML3(Model<T>& model, const MatrixXT& X, const ArrayXi& y,const
 	// IF THE REQUESTED NUMBER OF K-MEANS INITIALIZATION ITERATIONS IS GRATER THAN ZERO
 	// IT INITIALIZES W_INIT USING K-MEANS. OTHERWISE IT INITIALIZES W_INIT RANDOMLY
 	if(maxKMIter>0){
-		KM<T> km=KM<T>();
-		km.trainKM(X, m, maxKMIter, verbose, W_INIT);
+		Clustering<T> km=Clustering<T>();
+		km.trainKMeans(X, m, maxKMIter, verbose, W_INIT);
 	}else{
 		// RESEEDS THE NUMBER GENERATOR
 		std::srand(0);

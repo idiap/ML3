@@ -119,7 +119,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		if (model.maxCCCPIter < 0){
 			mexErrMsgTxt("The number of CCCP iterations must be >= 0 \n");
 		}else if (model.initStep==0 && model.maxCCCPIter==0){
-			mexErrMsgTxt("If no initialization is performed the number of CCCP iterations must >= 1 \n");
+			mexErrMsgTxt("If no initialization is performed the number of CCCP iterations must be >= 1 \n");
 		}
 
 		mu.timer_reset();

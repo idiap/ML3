@@ -39,7 +39,7 @@
 #include <float.h>
 
 #include "Model.h"
-#include "KM.h"
+#include "Clustering.h"
 
 using namespace Eigen;
 
