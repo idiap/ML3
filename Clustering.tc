@@ -40,13 +40,13 @@ void Clustering<T>::trainKMeans(const MatrixXT &X, const uint m, const uint maxI
 	 * storing the cluster centers in M.
 	 * If verbose>0 it also produce some textual output regarding the computation.
 	 */
-	
+
 	uint it;
-	T nrmDiff, eps;
+	T eps, obj, obj_old;
 	typename VectorXT::Index ii;
 	ArrayXT nsClust, rand_id;
 	MatrixXT M_OLD;
-	VectorXT Xt, f;
+	VectorXT Xt, f, oldSqNorms;
 	const uint n= X.cols();
 	const uint d= X.rows();
 
@@ -60,46 +60,58 @@ void Clustering<T>::trainKMeans(const MatrixXT &X, const uint m, const uint maxI
 		it=rand_id(s);
 		M.row(s)=X.col(it).transpose();
 	}
+
+	//SETS THE DESIRED PRECISION IN THE CONVERGENCE 
+	eps=1e-6;
 	
-	//THE DESIRED PRECISION IN THE CONVERGENCE 
-	eps=1e-3;
+	//SETS TO ZERO THE VALUE OF THE OBJECTIVE FUNCTION
+	obj=0;
 
 	//MAIN K-MEANS LOOP
 	for(uint iter=0; iter<maxIter; iter++){
-		//SAVES THE PREVIOUS SOLUTION IN ORDER TO BE ABLE TO COMPUTE THE distances for each sample
+		
+		//SAVES THE PREVIOUS SOLUTION IN ORDER TO BE ABLE TO COMPUTE THE DISTANCES FOR EACH SAMPLE
 		M_OLD=M;
 		M=MatrixXT::Zero(m,d);
 		nsClust=ArrayXT::Zero(m); // VARIABLE TO STORE THE NUMBER OF SAMPLES THAT ARE ASSIGNED TO EACH CLUSTER
+
+		//PRE-COMPUTES THE VECTOR CONTAINING THE SQUARED NORMS OF THE OLD CLUSTER CENTERS
+		oldSqNorms=M_OLD.array().square().rowwise().sum().matrix();
+
+		//STORES THE VALUE OF THE OBJECTIVE FUNCTION AND RESETS IT TO ZERO
+		obj_old=obj;
+		obj=0;
+
 		//LOOP OVER THE SAMPLES
 		for(uint s=0;s<n;s++){
-			
+
 			//SELECTS A TRAINING SAMPLE
 			Xt=X.col(s);
-			
+
 			// COMPUTES THE INDEX OF THE CLOSEST VOCABULARY CENTER TO THE CURRENT SAMPLE
-			f=M_OLD.array().square().rowwise().sum().matrix()-2*M_OLD*Xt;
-			f.minCoeff(&ii);
-			
+			// USING THE OLD MATRIX OF CENTERS AND THE PRECOMPUTED NORMS OF M
+			// IT IGNORES THE NORM OF Xt AS IT IS IRRELEVANT TO COMPUTE THE ASSIGNEMENTS
+			f=oldSqNorms-2*M_OLD*Xt;
+			obj+=f.minCoeff(&ii);
+
 			//ADDS THE SAMPLE s TO THE ii ROW OF THE MATRIX OF CENTERS
 			M.block(ii,0,1,d).noalias() += Xt.transpose();
-			
-			//INCREMENTS THE NUMBER OF SAMPLE ASSIGNED TO THE ii CLUSTER
+
+			//INCREMENTS THE NUMBER OF SAMPLES ASSIGNED TO THE ii CLUSTER
 			nsClust(ii)+=1;
 		}
-		
+		obj=obj/n;
+
 		//NORMALIZES EACH CLUSTER CENTER, DIVIDING BY THE NUMBER OF SAMPLES ASSIGNED TO THAT CENTER
 		M.noalias() = (M.array()/nsClust.max(FLT_EPSILON).replicate(1,d)).matrix();
 
-		//COMPUTES THE RELATIVE NORM OF THE DIFFERENCE BETWEEN THE PREVIOUS SOLUTION AND THE PRESENT ONE
-		nrmDiff=(M-M_OLD).norm()/M.norm();
-		
-		//IF NECESSARY OUTPUT SOME LOG INFORMATION
+		//IF NECESSARY OUTPUTS SOME LOG INFORMATION
 		if (verbose>0)
-			std::cout<<"#kmeans iter "<<iter<<"/"<<(maxIter-1)<<", rel-diff:"<<nrmDiff<<std::endl;
-		
-		//IF THE RELATIVE NORM OF THE DIFFERENCE BETWEEN THE PREVIOUS SOLUTION AND THE PRESENT ONE, nrmDiff 
-		//IS LOWER THAN A CERTAIN DESIRED PRECISION eps, IT TERMINATES THE K-MEANS ALGORITHM
-		if(nrmDiff<eps)
+			std::cout<<"#kmeans iter "<<iter<<"/"<<(maxIter-1)<<", obj:"<<obj<<std::endl;
+
+		//IF THE REDUCTION IN THE VALUE OF THE OBJECTIVE FUNCTION IS LOWER THAN 
+		//A CERTAIN DESIRED PRECISION eps, IT TERMINATES THE ALGORITHM
+		if(fabs(obj_old-obj)<eps)
 			break;
 	}
 }

@@ -133,6 +133,7 @@ std::ostream& operator<<(std::ostream& o, const Model<T> & m)
 
 	o <<"Model:"<< std::endl;
 	o << Model<T>::fnames[0]<<": "<<m.lambda<<std::endl;
+	o << Model<T>::fnames[23]<<": "<<m.maxKMIter<<std::endl;
 	o << Model<T>::fnames[1]<<": "<<m.maxCCCPIter<<std::endl;
 	o << Model<T>::fnames[2]<<": "<<m.verbose<<std::endl;
 	o << Model<T>::fnames[3]<<": "<<m.nCla<<std::endl;
@@ -148,7 +149,6 @@ std::ostream& operator<<(std::ostream& o, const Model<T> & m)
 	o << Model<T>::fnames[19]<<": "<<m.W2[0].topLeftCorner(1,mcol)<<"..."<<std::endl;
 	if(m.returnLocalBeta)
 		o << Model<T>::fnames[20]<<": "<<m.localBetaClass.topLeftCorner(mrep,1)<<"..."<<std::endl;
-	o << Model<T>::fnames[23]<<": "<<m.maxKMIter<<std::endl;
 
 	return o;
 }
