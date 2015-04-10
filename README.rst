@@ -2,7 +2,7 @@ Multiclass Latent Locally Linear SVM
 ==========================================
 
 | Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
-| Written by `Marco Fornoni <http://www.idiap.ch/~mfornoni/>`_ <marco.fornoni@idiap.ch>
+| Written by `Marco Fornoni <http://fornoni.github.io/>`_ <marco.fornoni@alumni.epfl.ch>
 |
 | Idiap Research Institute,
 | Centre du Parc, P.O. Box 592,

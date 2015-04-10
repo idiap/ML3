@@ -8,7 +8,7 @@
 #  JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013 Proceedings)
 #
 #  Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
-#  Written by Marco Fornoni <marco.fornoni@idiap.ch>
+#  Written by Marco Fornoni <marco.fornoni@alumni.epfl.ch>
 # 
 #  This file is part of the ML3 Software.
 # 

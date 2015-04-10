@@ -8,7 +8,7 @@
  * JMLR Workshop and Conference Proceedings Volume 29 (ACML 2013 Proceedings)
  *
  * Copyright (c) 2013 Idiap Research Institute, http://www.idiap.ch/
- * Written by Marco Fornoni <marco.fornoni@idiap.ch>
+ * Written by Marco Fornoni <marco.fornoni@alumni.epfl.ch>
  *
  * This file is part of the ML3 Software.
  *
@@ -24,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ML3. If not, see <http://www.gnu.org/licenses/>.
  *
- * trainML3CCCPspeedD.cc
+ * trainML3D.cc
  *
  * MATLAB interface to train a ML3 model on double-precision data
  *
